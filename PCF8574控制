@@ -1,0 +1,128 @@
+esphome:
+  name: pcf5874
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "nana's home"
+  password: "871245112312"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pcf5874 Fallback Hotspot"
+    password: "Jvqk84Zm1cxG"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "870102"
+
+ota:
+  password: "870102"
+
+# Example configuration entry
+i2c:
+  sda: 4
+  scl: 5
+  scan: True
+  id: bus_a
+# Example configuration entry
+pcf8574:
+  - id: 'pcf8574_hub'
+    address: 0x20
+    pcf8575: False
+
+# Individual outputs
+output:
+  - platform: gpio
+    pin: GPIO16
+    id: relay1
+    
+  - platform: gpio
+    pin: GPIO14
+    id: relay2
+    
+  - platform: gpio
+    pin: GPIO12
+    id: relay3
+    
+  - platform: gpio
+    pin: GPIO13
+    id: relay4
+light:
+  - platform: binary
+    name: "light1"
+    id: ktd
+    output: relay1  
+    
+  - platform: binary
+    name: "light2"
+    id: ktsd
+    output: relay2
+    
+  - platform: binary
+    name: "light3"
+    id: gdsd
+    output: relay3
+
+  - platform: binary
+    name: "light4"
+    id: gddd
+    output: relay4
+binary_sensor:
+  - platform: gpio
+    pin: 
+      pcf8574: pcf8574_hub
+      number: 0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "客厅灯状态"
+    on_press:
+      then:
+        - light.toggle: ktd
+    on_release:
+      then:
+        - light.toggle: ktd
+  - platform: gpio
+    pin: 
+      pcf8574: pcf8574_hub
+      number: 1
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "客厅射灯状态"
+    on_press:
+      then:
+        - light.toggle: ktsd
+    on_release:
+      then:
+        - light.toggle: ktsd
+  - platform: gpio
+    pin: 
+      pcf8574: pcf8574_hub
+      number: 2
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "过道射灯状态"
+    on_press:
+      then:
+        - light.toggle: gdsd
+    on_release:
+      then:
+        - light.toggle: gdsd
+  - platform: gpio
+    pin: 
+      pcf8574: pcf8574_hub
+      number: 3
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "过道灯带状态"
+    on_press:
+      then:
+        - light.toggle: gddd
+    on_release:
+      then:
+        - light.toggle: gddd
